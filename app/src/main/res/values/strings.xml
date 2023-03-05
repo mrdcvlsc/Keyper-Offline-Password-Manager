@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Offline Password Manager</string>
+
+    <string name="txt_db_name_hint">Database Name</string>
+    <string name="txt_username_hint">Username</string>
+    <string name="txt_password_hint">Password</string>
+    <string name="txt_password_confirm_hint">Re-Type Password</string>
+    <string name="txt_platform_hint">Platform</string>
+
+    <string name="btn_create_db_text">Create Database</string>
+    <string name="btn_open_db_text">Open Database</string>
+    <string name="btn_open_text">Open</string>
+    <string name="btn_create_text">Create</string>
+    <string name="btn_clear_text">Clear</string>
+    <string name="btn_confirm_text">Confirm</string>
+
+    <string name="cd_imgbtn_show">show password</string>
+    <string name="cd_imgbtn_copy">copy to clipboard</string>
+    <string name="cd_btn_add_account">add account information</string>
+</resources>

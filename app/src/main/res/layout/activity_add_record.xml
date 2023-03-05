@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddRecordActivity">
+
+  <EditText
+      android:id="@+id/add_record_et_username"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="64dp"
+      android:layout_marginEnd="32dp"
+      android:ems="10"
+      android:hint="@string/txt_username_hint"
+      android:inputType="textPersonName"
+      android:importantForAutofill="no"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <EditText
+      android:id="@+id/add_record_et_platform"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="32dp"
+      android:ems="10"
+      android:hint="@string/txt_platform_hint"
+      android:inputType="textPersonName"
+      android:importantForAutofill="no"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/add_record_et_username" />
+
+  <EditText
+      android:id="@+id/add_record_et_password"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="32dp"
+      android:ems="10"
+      android:hint="@string/txt_password_hint"
+      android:inputType="textPassword"
+      android:autofillHints="password"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/add_record_et_platform" />
+
+  <EditText
+      android:id="@+id/add_record_et_password_confirm"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="32dp"
+      android:ems="10"
+      android:hint="@string/txt_password_confirm_hint"
+      android:inputType="textPassword"
+      android:autofillHints="password"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/add_record_et_password" />
+
+  <Button
+      android:id="@+id/add_record_btn_confirm"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="128dp"
+      android:layout_marginEnd="32dp"
+      android:contentDescription="@string/btn_confirm_text"
+      android:text="@string/btn_confirm_text"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/add_record_et_password_confirm" />
+
+  <Button
+      android:id="@+id/add_record_btn_clear"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="32dp"
+      android:contentDescription="@string/btn_clear_text"
+      android:onClick="btnClearField"
+      android:text="@string/btn_clear_text"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/add_record_btn_confirm" />
+</androidx.constraintlayout.widget.ConstraintLayout>
