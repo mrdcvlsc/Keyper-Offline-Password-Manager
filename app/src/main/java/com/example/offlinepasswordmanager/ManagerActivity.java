@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -31,6 +32,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class ManagerActivity extends AppCompatActivity {
 
     private ArrayList<Account> accountArray;
+
     private AccountRecyclerViewAdapter adapter;
 
     private static String DATABASE_NAME;
@@ -51,6 +53,46 @@ public class ManagerActivity extends AppCompatActivity {
         Log.d("manager-calls", "ArrayList data loaded");
 
         setRecyclerView();
+
+        SearchView searchView = findViewById(R.id.manager_sv_search);
+        searchView.clearFocus();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchMatchingRecord(newText);
+                return true;
+            }
+        });
+
+        searchView.setOnCloseListener(() -> {
+            Log.d("searchView", "closed");
+            adapter.setData(accountArray);
+            return true;
+        });
+    }
+
+    private void searchMatchingRecord(String newText) {
+        ArrayList<Account> matchingRecords = new ArrayList<>();
+
+        for (int i = 0; i < accountArray.size(); ++i) {
+            boolean usernameMatch = accountArray.get(i).getUsername().toLowerCase().contains(newText.toLowerCase());
+            boolean platformMatch = accountArray.get(i).getPlatform().toLowerCase().contains(newText.toLowerCase());
+
+            if (usernameMatch || platformMatch) {
+                matchingRecords.add(accountArray.get(i));
+            }
+        }
+
+        if (!matchingRecords.isEmpty()) {
+            adapter.setData(matchingRecords);
+        } else {
+            adapter.setData(new ArrayList<>());
+        }
     }
 
     private void setRecyclerView() {
@@ -79,9 +121,49 @@ public class ManagerActivity extends AppCompatActivity {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
 
+            AccountRecyclerViewAdapter.MyViewHolder myViewHolder = (AccountRecyclerViewAdapter.MyViewHolder) viewHolder;
+
+            String username = myViewHolder.getUsername().getText().toString();
+            String platform = myViewHolder.getPlatform().getText().toString();
+            String uid = username + platform;
+
             if (direction == ItemTouchHelper.LEFT) {
-                accountArray.remove(position);
-                adapter.notifyItemRemoved(position);
+                try {
+                    // delete record in the Sqlite database
+                    AccountDbHelper dbHelper = new AccountDbHelper(getApplicationContext(), DATABASE_NAME, null, 1);
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+                    String selection = "uid = ?";
+                    String[] selectionArgs = { uid };
+
+                    int deletedRows = db.delete("records", selection, selectionArgs);
+
+                    dbHelper.close();
+
+                    // remove the account record in the adapter array list, and the original array list
+                    int index = -1;
+                    while (++index < accountArray.size()) {
+                        String accountUsername = accountArray.get(index).getUsername();
+                        String accountPlatform = accountArray.get(index).getPlatform();
+
+                        if (accountUsername.equals(username) && accountPlatform.equals(platform)) {
+                            break;
+                        }
+                    }
+
+                    if (index > -1) {
+                        accountArray.remove(index);
+                    }
+
+                    adapter.removeItem(position);
+
+                    // end delete, alert success
+                    Toast.makeText(getApplicationContext(), "" + deletedRows + " record removed", Toast.LENGTH_LONG).show();
+                } catch (Exception err) {
+
+                    // alert failed delete
+                    Toast.makeText(getApplicationContext(), "Failed to delete the record", Toast.LENGTH_LONG).show();
+                }
             }
         }
 
@@ -109,6 +191,13 @@ public class ManagerActivity extends AppCompatActivity {
         addRecordActivityResultLauncher.launch(intent);
     }
 
+    public void btnHelp(View view) {
+        Intent intent = new Intent(this, HelpActivity.class);
+        intent.putExtra("lata", DATABASE_NAME);
+        intent.putExtra("abre", RECORDING_PASSWORD);
+        helpActivityResultLauncher.launch(intent);
+    }
+
     private final ActivityResultLauncher<Intent> addRecordActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -128,12 +217,28 @@ public class ManagerActivity extends AppCompatActivity {
                         for (int i = 0; i < usernamesByteArray.length; ++i) {
                             accountArray.add(new Account(
                                 usernamesByteArray[i],
-                                platformsByteArray[i],
-                                passwordsByteArray[i]
+                                passwordsByteArray[i],
+                                platformsByteArray[i]
                             ));
 
                             adapter.notifyItemInserted(accountArray.size() - 1);
                         }
+                    }
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> helpActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                        Intent intent = result.getData();
+
+                        DATABASE_NAME = intent.getStringExtra("lata");
+                        RECORDING_PASSWORD = intent.getStringExtra("abre");
                     }
                 }
             }

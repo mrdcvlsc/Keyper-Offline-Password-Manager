@@ -7,14 +7,24 @@
     <string name="txt_password_confirm_hint">Re-Type Password</string>
     <string name="txt_platform_hint">Platform</string>
 
+    <string name="label_username">Username : </string>
+    <string name="label_platform">Platform : </string>
+    <string name="label_password">Password : </string>
+
     <string name="btn_create_db_text">Create Database</string>
     <string name="btn_open_db_text">Open Database</string>
     <string name="btn_open_text">Open</string>
     <string name="btn_create_text">Create</string>
     <string name="btn_clear_text">Clear</string>
     <string name="btn_confirm_text">Confirm</string>
+    <string name="btn_manager_text">Help</string>
 
     <string name="cd_imgbtn_show">show password</string>
     <string name="cd_imgbtn_copy">copy to clipboard</string>
     <string name="cd_btn_add_account">add account information</string>
+
+    <string name="help_1">1. Add - click the floating add button.</string>
+    <string name="help_2">2. Delete - swipe item from right to left.</string>
+    <string name="help_3">3. Show Password - click</string>
+    <string name="help_4">4. Copy Password - click</string>
 </resources>

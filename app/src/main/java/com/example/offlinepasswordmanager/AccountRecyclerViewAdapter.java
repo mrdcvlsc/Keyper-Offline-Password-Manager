@@ -1,5 +1,6 @@
 package com.example.offlinepasswordmanager;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -20,6 +21,17 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
 
     public AccountRecyclerViewAdapter(ArrayList<Account> accountArray) {
         this.accountArray = accountArray;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setData(ArrayList<Account> newData) {
+        accountArray = newData;
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int position) {
+        accountArray.remove(position);
+        notifyItemRemoved(position);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -54,6 +66,18 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
                 clipboardManager.setPrimaryClip(clipData);
                 copyNotice.show();
             });
+        }
+
+        public TextView getUsername() {
+            return username;
+        }
+
+        public TextView getPlatform() {
+            return platform;
+        }
+
+        public TextView getPassword() {
+            return password;
         }
     }
 
