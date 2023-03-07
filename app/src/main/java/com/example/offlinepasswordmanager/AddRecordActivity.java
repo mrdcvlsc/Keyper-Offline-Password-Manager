@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -102,15 +101,12 @@ public class AddRecordActivity extends AppCompatActivity {
             return true;
         } catch (Exception err) {
             Toast.makeText(this, "Failed to add the record", Toast.LENGTH_LONG).show();
-            Log.d("AddRecordActivity", "insert to db error :\n\n" + err);
             return false;
         }
     }
 
     @Override
     public void onBackPressed() {
-        Log.d("back-press", "is this working?");
-
         String[] usernamesByteArray = new String[usernames.size()];
         String[] platformsByteArray = new String[platforms.size()];
         String[] passwordsByteArray = new String[passwords.size()];

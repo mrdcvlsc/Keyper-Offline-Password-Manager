@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -43,14 +42,10 @@ public class ManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
 
-        Log.d("manager-calls", "initial setup loaded");
-
         DATABASE_NAME = getIntent().getStringExtra("lata");
         RECORDING_PASSWORD = getIntent().getStringExtra("abre");
 
         readDb(DATABASE_NAME);
-
-        Log.d("manager-calls", "ArrayList data loaded");
 
         setRecyclerView();
 
@@ -70,7 +65,6 @@ public class ManagerActivity extends AppCompatActivity {
         });
 
         searchView.setOnCloseListener(() -> {
-            Log.d("searchView", "closed");
             adapter.setData(accountArray);
             return true;
         });
@@ -104,8 +98,6 @@ public class ManagerActivity extends AppCompatActivity {
         accountRecyclerView.setLayoutManager(layoutManager);
         accountRecyclerView.setItemAnimator(new DefaultItemAnimator());
         accountRecyclerView.setAdapter(adapter);
-
-        Log.d("manager-calls", "setRecyclerView call");
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteAccountRecordCallBack);
         itemTouchHelper.attachToRecyclerView(accountRecyclerView);
@@ -179,8 +171,6 @@ public class ManagerActivity extends AppCompatActivity {
                     .decorate();
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-//            Log.d("Slide Action", "Detected Slide to left");
         }
     };
 
@@ -245,8 +235,6 @@ public class ManagerActivity extends AppCompatActivity {
     );
 
     private void readDb(String dbName) {
-        Log.d("manager-calls", "readDb invokation");
-
         String columnOrder = "username";
         String orderBy = "DESC"; // "ASC" - Ascending
 
@@ -287,8 +275,6 @@ public class ManagerActivity extends AppCompatActivity {
 
                 password = Cryptography.decrypt(algorithm, cipherPW, secretKey, randomIV);
 
-//                Log.d("password", password);
-
                 accountArray.add(new Account(username, password, platform));
             }
 
@@ -303,7 +289,6 @@ public class ManagerActivity extends AppCompatActivity {
             dbHelper.close();
         } catch (Exception err) {
             Toast.makeText(this, "Error reading the records", Toast.LENGTH_LONG).show();
-            Log.d("Manager Read Error", err.getMessage());
         }
     }
 }

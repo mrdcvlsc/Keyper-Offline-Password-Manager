@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -81,10 +80,9 @@ public class OpenActivity extends AppCompatActivity {
                 }
 
             } catch (Exception err) {
-                Log.d("OpenActivity", err.getMessage());
+                Toast.makeText(this, "Error opening the database", Toast.LENGTH_LONG).show();
             }
         } else {
-            Log.d("open activity", "database not found");
             Toast.makeText(this, "database not found", Toast.LENGTH_LONG).show();
         }
     }

@@ -1,14 +1,13 @@
 package com.example.offlinepasswordmanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateActivity extends AppCompatActivity {
     @Override
@@ -73,10 +72,8 @@ public class CreateActivity extends AppCompatActivity {
 
                 db.insert("info", null, values);
 
-                Log.d("password-hashing", "PASSED");
             } catch (Exception err) {
-                Log.d("password-hashing", "FAILED");
-                Log.d("password-hashing-error", "\n\n" + err.getMessage());
+                Toast.makeText(getApplicationContext(), "Internal Error Occured", Toast.LENGTH_SHORT).show();
                 throw err;
             }
             // password hashing : end
@@ -86,7 +83,6 @@ public class CreateActivity extends AppCompatActivity {
             return true;
         } catch (Exception err) {
             Toast.makeText(this, "Database already existed", Toast.LENGTH_LONG).show();
-            Log.d("SQLite Exception", "table creation :\n\n" + err.getMessage());
             return false;
         }
     }

@@ -1,7 +1,5 @@
 package com.example.offlinepasswordmanager;
 
-import android.util.Log;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,10 +24,8 @@ public class Hash {
             return convertToHex(hash);
         }
         catch(NoSuchAlgorithmException e){
-            Log.d("Hash.sha512", e.getMessage());
+            return "";
         }
-
-        return "";
     }
 
     private static String convertToHex(byte[] raw){
