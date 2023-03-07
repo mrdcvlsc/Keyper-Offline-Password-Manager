@@ -1,5 +1,18 @@
 package com.example.offlinepasswordmanager;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -8,13 +21,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.graphics.Canvas;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
 import java.util.ArrayList;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -23,39 +33,28 @@ public class ManagerActivity extends AppCompatActivity {
     private ArrayList<Account> accountArray;
     private AccountRecyclerViewAdapter adapter;
 
+    private static String DATABASE_NAME;
+    private static String RECORDING_PASSWORD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
 
-        Log.d("onCreate", "initial setup loaded");
+        Log.d("manager-calls", "initial setup loaded");
 
-        accountArray = new ArrayList<>();
-        accountArray.add(new Account("Alpha", "alpha_password", "facebook"));
-        accountArray.add(new Account("Beta", "beta_password", "discord"));
-        accountArray.add(new Account("Charlie", "charlie_password", "reddit"));
-        accountArray.add(new Account("Delta", "delta_password", "stackoverflow"));
-        accountArray.add(new Account("Epsilon", "epsilon_password", "twitter"));
-        accountArray.add(new Account("Foxtrot", "foxtrot_password", "gmail"));
-        accountArray.add(new Account("Micha", "micha_password", "JJ"));
-        accountArray.add(new Account("Mikka", "Mikka_password", "KK"));
-        accountArray.add(new Account("Lyka", "lyka_password", "NN"));
-        accountArray.add(new Account("Multi", "random", "exchange"));
-        accountArray.add(new Account("John", "Doe", "normal"));
-        accountArray.add(new Account("Karren", "annoying", "shit"));
-        accountArray.add(new Account("Kevin", "boy", "karen"));
-        accountArray.add(new Account("Alaine", "Odle", "Ulbert"));
-        accountArray.add(new Account("Bukubuku", "Chagama", "supreame_begin"));
-        accountArray.add(new Account("Death", "star", "space"));
-        accountArray.add(new Account("Vadar", "sith", "lord"));
-        accountArray.add(new Account("Walker", "jedi", "master"));
-        accountArray.add(new Account("Cloud", "greatsword", "finalfantasy"));
-        accountArray.add(new Account("Sora", "keyblade", "kingdomhearts"));
-        accountArray.add(new Account("Riku", "dragon", "breathoffire"));
+        DATABASE_NAME = getIntent().getStringExtra("lata");
+        RECORDING_PASSWORD = getIntent().getStringExtra("abre");
 
-        Log.d("onCreate", "ArrayList data loaded");
-//
-//        // set adapter
+        readDb(DATABASE_NAME);
+
+        Log.d("manager-calls", "ArrayList data loaded");
+
+        setRecyclerView();
+    }
+
+    private void setRecyclerView() {
+        // set adapter
         RecyclerView accountRecyclerView = findViewById(R.id.manager_rv_records);
         adapter = new AccountRecyclerViewAdapter(accountArray);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -64,7 +63,7 @@ public class ManagerActivity extends AppCompatActivity {
         accountRecyclerView.setItemAnimator(new DefaultItemAnimator());
         accountRecyclerView.setAdapter(adapter);
 
-        Log.d("onCreate", "Adapter loaded");
+        Log.d("manager-calls", "setRecyclerView call");
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteAccountRecordCallBack);
         itemTouchHelper.attachToRecyclerView(accountRecyclerView);
@@ -79,14 +78,6 @@ public class ManagerActivity extends AppCompatActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
-//            int position = viewHolder.getAdapterPosition();
-//
-//            switch (direction) {
-//                case ItemTouchHelper.LEFT:
-//                    accountArray.remove(position);
-//                    adapter.notifyItemRemoved(position);
-//                    break;
-//            }
 
             if (direction == ItemTouchHelper.LEFT) {
                 accountArray.remove(position);
@@ -107,12 +98,107 @@ public class ManagerActivity extends AppCompatActivity {
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-            Log.d("Slide Action", "Detected Slide to left");
+//            Log.d("Slide Action", "Detected Slide to left");
         }
     };
 
     public void btnAddRecord(View view) {
         Intent intent = new Intent(this, AddRecordActivity.class);
-        startActivity(intent);
+        intent.putExtra("lata", DATABASE_NAME);
+        intent.putExtra("abre", RECORDING_PASSWORD);
+        addRecordActivityResultLauncher.launch(intent);
+    }
+
+    private final ActivityResultLauncher<Intent> addRecordActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                        Intent intent = result.getData();
+
+                        DATABASE_NAME = intent.getStringExtra("lata");
+                        RECORDING_PASSWORD = intent.getStringExtra("abre");
+
+                        String[] usernamesByteArray = intent.getStringArrayExtra("usernames");
+                        String[] platformsByteArray = intent.getStringArrayExtra("platforms");
+                        String[] passwordsByteArray = intent.getStringArrayExtra("passwords");
+
+                        for (int i = 0; i < usernamesByteArray.length; ++i) {
+                            accountArray.add(new Account(
+                                usernamesByteArray[i],
+                                platformsByteArray[i],
+                                passwordsByteArray[i]
+                            ));
+
+                            adapter.notifyItemInserted(accountArray.size() - 1);
+                        }
+                    }
+                }
+            }
+    );
+
+    private void readDb(String dbName) {
+        Log.d("manager-calls", "readDb invokation");
+
+        String columnOrder = "username";
+        String orderBy = "DESC"; // "ASC" - Ascending
+
+        try {
+            AccountDbHelper dbHelper = new AccountDbHelper(getApplicationContext(), dbName, null, 1);
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.query(
+                    "records",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    columnOrder + " " + orderBy
+            );
+
+            if (accountArray == null) {
+                accountArray = new ArrayList<>();
+            } else {
+                accountArray.clear();
+            }
+
+            String algorithm = "AES/CBC/PKCS5Padding";
+
+            String username, platform, cipherPW, iv, salt, password;
+
+            while (cursor.moveToNext()) {
+                username = cursor.getString(cursor.getColumnIndexOrThrow("username"));
+                platform = cursor.getString(cursor.getColumnIndexOrThrow("platform"));
+                cipherPW = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+
+                iv = cursor.getString(cursor.getColumnIndexOrThrow("iv"));
+                salt = cursor.getString(cursor.getColumnIndexOrThrow("salt"));
+
+                SecretKey secretKey = Cryptography.generateKey(RECORDING_PASSWORD, salt);
+                IvParameterSpec randomIV = Cryptography.getIV(Cryptography.StringToByte(iv));
+
+                password = Cryptography.decrypt(algorithm, cipherPW, secretKey, randomIV);
+
+//                Log.d("password", password);
+
+                accountArray.add(new Account(username, password, platform));
+            }
+
+            cursor.close();
+
+            Toast.makeText(
+                    this,
+                    "Read a total of " + accountArray.size() + " records",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            dbHelper.close();
+        } catch (Exception err) {
+            Toast.makeText(this, "Error reading the records", Toast.LENGTH_LONG).show();
+            Log.d("Manager Read Error", err.getMessage());
+        }
     }
 }

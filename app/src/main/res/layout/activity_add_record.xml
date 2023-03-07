@@ -74,6 +74,7 @@
       android:layout_marginTop="128dp"
       android:layout_marginEnd="32dp"
       android:contentDescription="@string/btn_confirm_text"
+      android:onClick="btnAddRecord"
       android:text="@string/btn_confirm_text"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"

@@ -22,7 +22,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
         this.accountArray = accountArray;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView username, password, platform;
         private final Toast copyNotice;
 
@@ -36,29 +36,23 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
             password = view.findViewById(R.id.account_record_tv_password);
             copyNotice = Toast.makeText(view.getRootView().getContext(), "password copied to clipboard", Toast.LENGTH_LONG);
 
-            view.findViewById(R.id.account_record_btn_show).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int inputType = password.getInputType();
-                    switch (inputType) {
-                        case SHOW:
-                            password.setInputType(HIDE);
-                            break;
-                        case HIDE:
-                            password.setInputType(SHOW);
-                            break;
-                    }
+            view.findViewById(R.id.account_record_btn_show).setOnClickListener(v -> {
+                int inputType = password.getInputType();
+                switch (inputType) {
+                    case SHOW:
+                        password.setInputType(HIDE);
+                        break;
+                    case HIDE:
+                        password.setInputType(SHOW);
+                        break;
                 }
             });
 
-            view.findViewById(R.id.account_record_btn_copy).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ClipboardManager clipboardManager = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clipData = ClipData.newPlainText("text", password.getText().toString());
-                    clipboardManager.setPrimaryClip(clipData);
-                    copyNotice.show();
-                }
+            view.findViewById(R.id.account_record_btn_copy).setOnClickListener(v -> {
+                ClipboardManager clipboardManager = (ClipboardManager) v.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("text", password.getText().toString());
+                clipboardManager.setPrimaryClip(clipData);
+                copyNotice.show();
             });
         }
     }
@@ -80,6 +74,9 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
 
     @Override
     public int getItemCount() {
+        if (accountArray == null) {
+            return 0;
+        }
         return accountArray.size();
     }
 }
