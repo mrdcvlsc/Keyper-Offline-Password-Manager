@@ -94,13 +94,13 @@ public class AddRecordActivity extends AppCompatActivity {
             values.put("iv", Cryptography.ByteToString(raw_iv));
             values.put("salt", salt);
 
-            db.insert("records", null, values);
+            db.insertOrThrow("records", null, values);
             db.close();
 
             Toast.makeText(this, "Record was added", Toast.LENGTH_LONG).show();
             return true;
         } catch (Exception err) {
-            Toast.makeText(this, "Failed to add the record", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "The username in that platform already exist in the database", Toast.LENGTH_LONG).show();
             return false;
         }
     }

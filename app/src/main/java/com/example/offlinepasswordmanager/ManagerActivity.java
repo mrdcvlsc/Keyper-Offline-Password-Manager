@@ -1,5 +1,6 @@
 package com.example.offlinepasswordmanager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,11 +30,10 @@ import javax.crypto.spec.IvParameterSpec;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class ManagerActivity extends AppCompatActivity {
+    private AccountRecyclerViewAdapter adapter;
+    private SearchView searchView;
 
     private ArrayList<Account> accountArray;
-
-    private AccountRecyclerViewAdapter adapter;
-
     private static String DATABASE_NAME;
     private static String RECORDING_PASSWORD;
 
@@ -49,7 +49,7 @@ public class ManagerActivity extends AppCompatActivity {
 
         setRecyclerView();
 
-        SearchView searchView = findViewById(R.id.manager_sv_search);
+        searchView = findViewById(R.id.manager_sv_search);
         searchView.clearFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -66,6 +66,9 @@ public class ManagerActivity extends AppCompatActivity {
 
         searchView.setOnCloseListener(() -> {
             adapter.setData(accountArray);
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.onActionViewCollapsed();
             return true;
         });
     }
@@ -132,22 +135,25 @@ public class ManagerActivity extends AppCompatActivity {
 
                     dbHelper.close();
 
-                    // remove the account record in the adapter array list, and the original array list
-                    int index = -1;
-                    while (++index < accountArray.size()) {
-                        String accountUsername = accountArray.get(index).getUsername();
-                        String accountPlatform = accountArray.get(index).getPlatform();
+                    // remove the account record in the adapter array list
+                    ArrayList<Account> adapterData = adapter.getDataReference();
+                    adapterData.remove(position);
+                    adapter.notifyItemRemoved(position);
 
-                        if (accountUsername.equals(username) && accountPlatform.equals(platform)) {
-                            break;
+                    // remove the account record in the original array list if adapter array list has different reference
+                    if (accountArray != adapterData) {
+                        int index = -1;
+
+                        while (++index < accountArray.size()) {
+                            String indexUsername = accountArray.get(index).getUsername();
+                            String indexPlatform = accountArray.get(index).getPlatform();
+
+                            if (indexUsername.equals(username) && indexPlatform.equals(platform)) {
+                                accountArray.remove(index);
+                                break;
+                            }
                         }
                     }
-
-                    if (index > -1) {
-                        accountArray.remove(index);
-                    }
-
-                    adapter.removeItem(position);
 
                     // end delete, alert success
                     Toast.makeText(getApplicationContext(), "" + deletedRows + " record removed", Toast.LENGTH_LONG).show();
@@ -191,9 +197,11 @@ public class ManagerActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> addRecordActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        String searchText = searchView.getQuery().toString();
 
                         Intent intent = result.getData();
 
@@ -204,6 +212,8 @@ public class ManagerActivity extends AppCompatActivity {
                         String[] platformsByteArray = intent.getStringArrayExtra("platforms");
                         String[] passwordsByteArray = intent.getStringArrayExtra("passwords");
 
+                        boolean matchInAdded = false;
+
                         for (int i = 0; i < usernamesByteArray.length; ++i) {
                             accountArray.add(new Account(
                                 usernamesByteArray[i],
@@ -211,7 +221,24 @@ public class ManagerActivity extends AppCompatActivity {
                                 platformsByteArray[i]
                             ));
 
-                            adapter.notifyItemInserted(accountArray.size() - 1);
+                            if (accountArray != adapter.getDataReference()) {
+                                adapter.addOnlyItem(new Account(
+                                        usernamesByteArray[i],
+                                        passwordsByteArray[i],
+                                        platformsByteArray[i]
+                                ));
+                            }
+
+                            boolean usernameMatch = usernamesByteArray[i].toLowerCase().contains(searchText.toLowerCase());
+                            boolean platformMatch = platformsByteArray[i].toLowerCase().contains(searchText.toLowerCase());
+
+                            if (usernameMatch || platformMatch) {
+                                matchInAdded = true;
+                            }
+                        }
+
+                        if (matchInAdded) {
+                            adapter.notifyDataSetChanged();
                         }
                     }
                 }

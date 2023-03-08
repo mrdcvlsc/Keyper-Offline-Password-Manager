@@ -19,6 +19,10 @@ import java.util.ArrayList;
 public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecyclerViewAdapter.MyViewHolder> {
     ArrayList<Account> accountArray;
 
+    public ArrayList<Account> getDataReference() {
+        return this.accountArray;
+    }
+
     public AccountRecyclerViewAdapter(ArrayList<Account> accountArray) {
         this.accountArray = accountArray;
     }
@@ -29,9 +33,8 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecy
         notifyDataSetChanged();
     }
 
-    public void removeItem(int position) {
-        accountArray.remove(position);
-        notifyItemRemoved(position);
+    public void addOnlyItem(Account account) {
+        accountArray.add(account);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
