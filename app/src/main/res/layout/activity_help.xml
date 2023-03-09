@@ -67,7 +67,7 @@
         android:contentDescription="@string/cd_imgbtn_show"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:srcCompat="@drawable/baseline_remove_red_eye_24" />
+        app:srcCompat="@drawable/ic_btn_eye" />
 
     <ImageButton
         android:id="@+id/imageButton2"
@@ -78,5 +78,5 @@
         android:contentDescription="@string/cd_imgbtn_copy"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/imageButton"
-        app:srcCompat="@drawable/baseline_content_copy_24" />
+        app:srcCompat="@drawable/ic_btn_copy" />
 </androidx.constraintlayout.widget.ConstraintLayout>

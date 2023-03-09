@@ -1,6 +1,7 @@
 package com.example.offlinepasswordmanager;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -10,16 +11,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateActivity extends AppCompatActivity {
+
+    EditText editTextDbName, editTextDbPassword, editTextDbConfirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        editTextDbName = findViewById(R.id.create_et_db_name);
+        editTextDbPassword = findViewById(R.id.create_et_password);
+        editTextDbConfirm = findViewById(R.id.create_et_confirm_password);
     }
 
     public void btnCreate(View view) {
-        String dbname = ((EditText) findViewById(R.id.create_et_db_name)).getText().toString();
-        String password = ((EditText) findViewById(R.id.create_et_password)).getText().toString();
-        String confirm = ((EditText) findViewById(R.id.create_et_confirm_password)).getText().toString();
+        String dbname = editTextDbName.getText().toString();
+        String password = editTextDbPassword.getText().toString();
+        String confirm = editTextDbConfirm.getText().toString();
 
         if (dbname.isEmpty()) {
             Toast.makeText(this, "Please fill out the database name", Toast.LENGTH_LONG).show();
@@ -70,7 +77,7 @@ public class CreateActivity extends AppCompatActivity {
                 values.put("dbhash", hashedPassword);
                 values.put("dbsalt", salt);
 
-                db.insert("info", null, values);
+                db.insertOrThrow("info", null, values);
 
             } catch (Exception err) {
                 Toast.makeText(getApplicationContext(), "Internal Error Occured", Toast.LENGTH_SHORT).show();
@@ -80,6 +87,17 @@ public class CreateActivity extends AppCompatActivity {
 
             dbHelper.close();
             Toast.makeText(this, "Database successfully created", Toast.LENGTH_LONG).show();
+
+            // open the manager activity
+            String recordingPassword = Hash.SHA512Hash(hashedPassword, salt, Hash.ITERATION_LEVEL);
+
+            Intent intent = new Intent(this, ManagerActivity.class);
+            intent.putExtra("lata", DB_NAME);
+            intent.putExtra("abre", recordingPassword);
+
+            btnClearField(null);
+
+            startActivity(intent);
             return true;
         } catch (Exception err) {
             Toast.makeText(this, "Database already existed", Toast.LENGTH_LONG).show();
@@ -88,8 +106,8 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void btnClearField(View view) {
-        ((EditText) findViewById(R.id.create_et_db_name)).setText("");
-        ((EditText) findViewById(R.id.create_et_password)).setText("");
-        ((EditText) findViewById(R.id.create_et_confirm_password)).setText("");
+        editTextDbName.setText("");
+        editTextDbPassword.setText("");
+        editTextDbConfirm.setText("");
     }
 }

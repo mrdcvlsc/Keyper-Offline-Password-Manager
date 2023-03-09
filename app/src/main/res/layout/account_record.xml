@@ -67,7 +67,7 @@
         android:contentDescription="@string/cd_imgbtn_copy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/baseline_content_copy_24" />
+        app:srcCompat="@drawable/ic_btn_copy" />
 
     <ImageButton
         android:id="@+id/account_record_btn_show"
@@ -78,7 +78,7 @@
         android:contentDescription="@string/cd_imgbtn_show"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/account_record_btn_copy"
-        app:srcCompat="@drawable/baseline_remove_red_eye_24" />
+        app:srcCompat="@drawable/ic_btn_eye" />
 
     <View
         android:id="@+id/bottom_divider"

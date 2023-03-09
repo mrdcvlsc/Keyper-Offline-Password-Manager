@@ -172,7 +172,7 @@ public class ManagerActivity extends AppCompatActivity {
             // then click "Sync"
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     .addBackgroundColor(ContextCompat.getColor(ManagerActivity.this, R.color.black))
-                    .addActionIcon(R.drawable.delete_icon)
+                    .addActionIcon(R.drawable.ic_btn_trash)
                     .create()
                     .decorate();
 

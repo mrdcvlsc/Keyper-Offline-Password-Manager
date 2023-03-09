@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecyclerViewAdapter.MyViewHolder> {
-    ArrayList<Account> accountArray;
+    private ArrayList<Account> accountArray;
 
     public ArrayList<Account> getDataReference() {
         return this.accountArray;

@@ -14,15 +14,22 @@ import java.io.File;
 
 public class OpenActivity extends AppCompatActivity {
 
+    private EditText editTextDbName;
+
+    private EditText editTextDbPass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open);
+
+        editTextDbName = findViewById(R.id.open_et_db_name);
+        editTextDbPass = findViewById(R.id.open_et_password);
     }
 
     public void btnOpen(View view) {
-        String dbName = ((EditText) findViewById(R.id.open_et_db_name)).getText().toString();
-        String dbPass = ((EditText) findViewById(R.id.open_et_password)).getText().toString();
+        String dbName = editTextDbName.getText().toString();
+        String dbPass = editTextDbPass.getText().toString();
 
         if (dbName.isEmpty()) {
             Toast.makeText(this, "Please fill out the database name", Toast.LENGTH_LONG).show();
@@ -68,12 +75,15 @@ public class OpenActivity extends AppCompatActivity {
                 dbHelper.close();
 
                 if (passwordHash.equals(hash)) {
-                    Intent intent = new Intent(this, ManagerActivity.class);
-                    intent.putExtra("lata", dbName);
-
                     String recordingPassword = Hash.SHA512Hash(hash, salt, Hash.ITERATION_LEVEL);
 
+                    Intent intent = new Intent(this, ManagerActivity.class);
+                    intent.putExtra("lata", dbName);
                     intent.putExtra("abre", recordingPassword);
+
+                    editTextDbName.setText("");
+                    editTextDbPass.setText("");
+
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Incorrect password", Toast.LENGTH_LONG).show();
