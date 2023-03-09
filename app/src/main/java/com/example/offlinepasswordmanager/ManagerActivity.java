@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
@@ -30,6 +33,7 @@ import javax.crypto.spec.IvParameterSpec;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class ManagerActivity extends AppCompatActivity {
+    private RecyclerView accountRecyclerView;
     private AccountRecyclerViewAdapter adapter;
     private SearchView searchView;
 
@@ -44,13 +48,25 @@ public class ManagerActivity extends AppCompatActivity {
 
         DATABASE_NAME = getIntent().getStringExtra("lata");
         RECORDING_PASSWORD = getIntent().getStringExtra("abre");
-
         setTitle("Database \"" + DATABASE_NAME + "\"");
 
-        readDb(DATABASE_NAME);
+        // load the database data into the accountArray
 
-        setRecyclerView();
+        accountArray = readDb(DATABASE_NAME);
 
+        // setup RecyclerView and it's Adapter
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        adapter = new AccountRecyclerViewAdapter(accountArray);
+        accountRecyclerView = findViewById(R.id.manager_rv_records);
+
+        accountRecyclerView.setLayoutManager(layoutManager);
+        accountRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        accountRecyclerView.setAdapter(adapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteAccountRecordCallBack);
+        itemTouchHelper.attachToRecyclerView(accountRecyclerView);
+
+        // setup SearchView
         searchView = findViewById(R.id.manager_sv_search);
         searchView.clearFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -92,20 +108,6 @@ public class ManagerActivity extends AppCompatActivity {
         } else {
             adapter.setData(new ArrayList<>());
         }
-    }
-
-    private void setRecyclerView() {
-        // set adapter
-        RecyclerView accountRecyclerView = findViewById(R.id.manager_rv_records);
-        adapter = new AccountRecyclerViewAdapter(accountArray);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-
-        accountRecyclerView.setLayoutManager(layoutManager);
-        accountRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        accountRecyclerView.setAdapter(adapter);
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteAccountRecordCallBack);
-        itemTouchHelper.attachToRecyclerView(accountRecyclerView);
     }
     
     ItemTouchHelper.SimpleCallback deleteAccountRecordCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -197,7 +199,17 @@ public class ManagerActivity extends AppCompatActivity {
     }
 
     public void btnDeleteDb(View view) {
-
+        String msg = "Are you sure you want to delete this database?";
+        Snackbar.make(accountRecyclerView, msg, Snackbar.LENGTH_LONG)
+                .setAction("Yes", view1 -> {
+                    getApplicationContext().deleteDatabase(DATABASE_NAME + ".db");
+                    Toast.makeText(
+                            ManagerActivity.this,
+                            "The \"" + DATABASE_NAME + "\" database is deleted",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    onBackPressed();
+                }).show();
     }
 
     public void btnExportDb(View view) {
@@ -231,16 +243,16 @@ public class ManagerActivity extends AppCompatActivity {
                                 platformsByteArray[i]
                             ));
 
-                            if (accountArray != adapter.getDataReference()) {
+                            boolean usernameMatch = usernamesByteArray[i].toLowerCase().contains(searchText.toLowerCase());
+                            boolean platformMatch = platformsByteArray[i].toLowerCase().contains(searchText.toLowerCase());
+
+                            if (accountArray != adapter.getDataReference() && (usernameMatch || platformMatch)) {
                                 adapter.addOnlyItem(new Account(
                                         usernamesByteArray[i],
                                         passwordsByteArray[i],
                                         platformsByteArray[i]
                                 ));
                             }
-
-                            boolean usernameMatch = usernamesByteArray[i].toLowerCase().contains(searchText.toLowerCase());
-                            boolean platformMatch = platformsByteArray[i].toLowerCase().contains(searchText.toLowerCase());
 
                             if (usernameMatch || platformMatch) {
                                 matchInAdded = true;
@@ -271,7 +283,7 @@ public class ManagerActivity extends AppCompatActivity {
             }
     );
 
-    private void readDb(String dbName) {
+    private ArrayList<Account> readDb(String dbName) {
         String columnOrder = "username";
         String orderBy = "DESC"; // "ASC" - Ascending
 
@@ -289,14 +301,10 @@ public class ManagerActivity extends AppCompatActivity {
                     columnOrder + " " + orderBy
             );
 
-            if (accountArray == null) {
-                accountArray = new ArrayList<>();
-            } else {
-                accountArray.clear();
-            }
+
+            ArrayList<Account> accountDbData = new ArrayList<>();
 
             String algorithm = "AES/CBC/PKCS5Padding";
-
             String username, platform, cipherPW, iv, salt, password;
 
             while (cursor.moveToNext()) {
@@ -312,20 +320,40 @@ public class ManagerActivity extends AppCompatActivity {
 
                 password = Cryptography.decrypt(algorithm, cipherPW, secretKey, randomIV);
 
-                accountArray.add(new Account(username, password, platform));
+                accountDbData.add(new Account(username, password, platform));
             }
 
             cursor.close();
 
             Toast.makeText(
                     this,
-                    "Read a total of " + accountArray.size() + " records",
+                    "Read a total of " + accountDbData.size() + " records",
                     Toast.LENGTH_LONG
             ).show();
 
             dbHelper.close();
+            return accountDbData;
+
         } catch (Exception err) {
             Toast.makeText(this, "Error reading the records", Toast.LENGTH_LONG).show();
+            return new ArrayList<>();
         }
+    }
+
+    // exit methods
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
