@@ -22,6 +22,7 @@ public class OpenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open);
+        setTitle("Login");
 
         editTextDbName = findViewById(R.id.open_et_db_name);
         editTextDbPass = findViewById(R.id.open_et_password);

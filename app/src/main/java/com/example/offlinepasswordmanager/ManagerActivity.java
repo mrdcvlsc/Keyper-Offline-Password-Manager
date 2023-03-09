@@ -45,6 +45,8 @@ public class ManagerActivity extends AppCompatActivity {
         DATABASE_NAME = getIntent().getStringExtra("lata");
         RECORDING_PASSWORD = getIntent().getStringExtra("abre");
 
+        setTitle("Database \"" + DATABASE_NAME + "\"");
+
         readDb(DATABASE_NAME);
 
         setRecyclerView();
@@ -192,6 +194,14 @@ public class ManagerActivity extends AppCompatActivity {
         intent.putExtra("lata", DATABASE_NAME);
         intent.putExtra("abre", RECORDING_PASSWORD);
         helpActivityResultLauncher.launch(intent);
+    }
+
+    public void btnDeleteDb(View view) {
+
+    }
+
+    public void btnExportDb(View view) {
+
     }
 
     private final ActivityResultLauncher<Intent> addRecordActivityResultLauncher = registerForActivityResult(

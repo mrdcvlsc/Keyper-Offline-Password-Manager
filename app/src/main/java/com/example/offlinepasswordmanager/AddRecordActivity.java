@@ -27,6 +27,7 @@ public class AddRecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_record);
+        setTitle("Add New Account Record");
 
         usernames = new ArrayList<>();
         platforms = new ArrayList<>();

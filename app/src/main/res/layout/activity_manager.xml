@@ -6,27 +6,72 @@
     android:layout_height="match_parent"
     tools:context=".ManagerActivity">
 
-    <Button
+    <ImageButton
+        android:id="@+id/manager_btn_export"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/round_bg"
+        android:contentDescription="@string/cd_imgbtn_export_db"
+        android:onClick="btnExportDb"
+
+        android:padding="11dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/manager_btn_delete_db"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_export_db" />
+
+    <ImageButton
+        android:id="@+id/manager_btn_delete_db"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/round_bg"
+        android:contentDescription="@string/cd_imgbtn_delete_db"
+
+        android:onClick="btnDeleteDb"
+        android:paddingStart="13dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:scaleType="fitCenter"
+
+        app:layout_constraintEnd_toStartOf="@+id/manager_btn_help"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_btn_db_delete" />
+
+    <ImageButton
         android:id="@+id/manager_btn_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/round_bg"
+        android:contentDescription="@string/btn_manager_text"
         android:onClick="btnHelp"
-        android:text="@string/btn_manager_text"
+
+        android:padding="8dp"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_btn_help" />
 
     <SearchView
         android:id="@+id/manager_sv_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/manager_btn_help"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/manager_btn_export"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/maager_btn_add"
+        android:id="@+id/manager_btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -44,9 +89,10 @@
         android:id="@+id/manager_rv_records"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/manager_sv_search" />
+        app:layout_constraintTop_toBottomOf="@+id/manager_btn_help" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

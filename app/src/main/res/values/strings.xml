@@ -13,6 +13,7 @@
 
     <string name="btn_create_db_text">Create Database</string>
     <string name="btn_open_db_text">Open Database</string>
+    <string name="btn_open_db_import">Import Database</string>
     <string name="btn_open_text">Open</string>
     <string name="btn_create_text">Create</string>
     <string name="btn_clear_text">Clear</string>
@@ -21,6 +22,8 @@
 
     <string name="cd_imgbtn_show">show password</string>
     <string name="cd_imgbtn_copy">copy to clipboard</string>
+    <string name="cd_imgbtn_delete_db">Delete database button</string>
+    <string name="cd_imgbtn_export_db">Export database button</string>
     <string name="cd_btn_add_account">add account information</string>
 
     <string name="help_1">1. Add - click the floating add button.</string>
