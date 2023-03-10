@@ -1,10 +1,12 @@
 package com.example.offlinepasswordmanager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
@@ -160,7 +165,7 @@ public class ManagerActivity extends AppCompatActivity {
                     }
 
                     // end delete, alert success
-                    Toast.makeText(getApplicationContext(), "" + deletedRows + " record removed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "" + deletedRows + " record removed", Toast.LENGTH_SHORT).show();
                 } catch (Exception err) {
 
                     // alert failed delete
@@ -200,21 +205,67 @@ public class ManagerActivity extends AppCompatActivity {
 
     public void btnDeleteDb(View view) {
         String msg = "Are you sure you want to delete this database?";
-        Snackbar.make(accountRecyclerView, msg, Snackbar.LENGTH_LONG)
-                .setAction("Yes", view1 -> {
-                    getApplicationContext().deleteDatabase(DATABASE_NAME + ".db");
-                    Toast.makeText(
-                            ManagerActivity.this,
-                            "The \"" + DATABASE_NAME + "\" database is deleted",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    onBackPressed();
-                }).show();
+        Snackbar.make(accountRecyclerView, msg, Snackbar.LENGTH_LONG).setAction("Yes", view1 -> {
+            getApplicationContext().deleteDatabase(DATABASE_NAME + ".db");
+            Toast.makeText(
+                    ManagerActivity.this,
+                    "The \"" + DATABASE_NAME + "\" database is deleted",
+                    Toast.LENGTH_LONG
+            ).show();
+            onBackPressed();
+        }).show();
     }
 
     public void btnExportDb(View view) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        folderPickerActivityLauncer.launch(intent);
 
     }
+
+    ActivityResultLauncher<Intent> folderPickerActivityLauncer = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+
+                        Intent intent = result.getData();
+                        Uri selectedFolderUri = intent.getData();
+
+                        String dbFileName = DATABASE_NAME + ".db";
+
+
+                        try {
+                            // Create a new empty file in the specified folder
+                            String outputMimeType = "application/octet-stream";
+                            DocumentFile folder = DocumentFile.fromTreeUri(getApplicationContext(), selectedFolderUri);
+                            DocumentFile outputFile = folder.createFile(outputMimeType, dbFileName);
+                            OutputStream outputStream = getContentResolver().openOutputStream(outputFile.getUri());
+
+                            // Read the database file
+                            String dbOriginalPath = getDatabasePath(dbFileName).getAbsolutePath();
+                            FileInputStream inputStream = new FileInputStream(dbOriginalPath);
+
+                            // And copy it to the output stream
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = inputStream.read(buffer)) > 0) {
+                                outputStream.write(buffer, 0, length);
+                            }
+
+                            // Close the streams
+                            inputStream.close();
+                            outputStream.flush();
+                            outputStream.close();
+
+                            Toast.makeText(getApplicationContext(), "Database backup created", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Error creating database backup", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+    );
 
     private final ActivityResultLauncher<Intent> addRecordActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -285,7 +336,7 @@ public class ManagerActivity extends AppCompatActivity {
 
     private ArrayList<Account> readDb(String dbName) {
         String columnOrder = "username";
-        String orderBy = "DESC"; // "ASC" - Ascending
+        String orderBy = "ASC"; // "DESC" - Ascending
 
         try {
             AccountDbHelper dbHelper = new AccountDbHelper(getApplicationContext(), dbName, null, 1);
@@ -328,7 +379,7 @@ public class ManagerActivity extends AppCompatActivity {
             Toast.makeText(
                     this,
                     "Read a total of " + accountDbData.size() + " records",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_SHORT
             ).show();
 
             dbHelper.close();
