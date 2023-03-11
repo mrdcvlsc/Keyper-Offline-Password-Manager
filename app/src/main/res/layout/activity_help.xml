@@ -7,144 +7,144 @@
     tools:context=".HelpActivity">
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/help_tv_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:text="@string/help_4"
+        android:text="@string/help_tv_4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_3" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/help_tv_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
-        android:text="@string/help_1"
+        android:text="@string/help_tv_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/help_tv_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:text="@string/help_2"
+        android:text="@string/help_tv_2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_1" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/help_tv_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:text="@string/help_3"
+        android:text="@string/help_tv_3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/help_btn_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="45dp"
         android:contentDescription="@string/cd_btn_add_account"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/help_tv_1"
         app:layout_constraintTop_toTopOf="parent"
         app:maxImageSize="48dp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/help_btn_3"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/semi_round_grey_bg"
-        android:contentDescription="@string/cd_imgbtn_show"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        android:contentDescription="@string/cd_img_btn_show"
+        app:layout_constraintStart_toEndOf="@+id/help_tv_3"
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_2"
         app:srcCompat="@drawable/ic_btn_eye" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/help_btn_4"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="18dp"
         android:background="@drawable/semi_round_grey_bg"
-        android:contentDescription="@string/cd_imgbtn_copy"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+        android:contentDescription="@string/cd_img_btn_copy"
+        app:layout_constraintStart_toEndOf="@+id/help_tv_4"
+        app:layout_constraintTop_toBottomOf="@+id/help_btn_3"
         app:srcCompat="@drawable/ic_btn_copy" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/help_tv_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
-        android:text="@string/help_5"
+        android:text="@string/help_tv_5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_4" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/help_tv_6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
-        android:text="@string/help_6"
+        android:text="@string/help_tv_6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_5" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/help_tv_7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
-        android:text="@string/help_7"
+        android:text="@string/help_tv_7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/help_tv_6" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/help_btn_5"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="17dp"
         android:background="@drawable/round_bg"
-        android:contentDescription="@string/help_5"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton2"
+        android:contentDescription="@string/btn_manager_text"
+        app:layout_constraintStart_toEndOf="@+id/help_tv_5"
+        app:layout_constraintTop_toBottomOf="@+id/help_btn_4"
         app:srcCompat="@drawable/ic_btn_help" />
 
     <ImageButton
-        android:id="@+id/imageButton4"
+        android:id="@+id/help_btn_6"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/round_bg"
-        android:contentDescription="@string/help_6"
+        android:contentDescription="@string/cd_img_btn_delete_db"
         android:src="@drawable/ic_btn_db_delete"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton3" />
+        app:layout_constraintStart_toEndOf="@+id/help_tv_6"
+        app:layout_constraintTop_toBottomOf="@+id/help_btn_5" />
 
     <ImageButton
-        android:id="@+id/imageButton5"
+        android:id="@+id/help_btn_7"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/round_bg"
-        android:contentDescription="@string/help_7"
-        app:layout_constraintStart_toEndOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton4"
+        android:contentDescription="@string/cd_img_btn_export_db"
+        app:layout_constraintStart_toEndOf="@+id/help_tv_7"
+        app:layout_constraintTop_toBottomOf="@+id/help_btn_6"
         app:srcCompat="@drawable/ic_export_db" />
 </androidx.constraintlayout.widget.ConstraintLayout>

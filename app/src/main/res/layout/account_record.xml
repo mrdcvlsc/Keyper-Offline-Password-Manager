@@ -59,7 +59,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:background="@drawable/semi_round_grey_bg"
-        android:contentDescription="@string/cd_imgbtn_copy"
+        android:contentDescription="@string/cd_img_btn_copy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/account_record_tv_platform"
         app:srcCompat="@drawable/ic_btn_copy" />
@@ -71,7 +71,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:background="@drawable/semi_round_grey_bg"
-        android:contentDescription="@string/cd_imgbtn_show"
+        android:contentDescription="@string/cd_img_btn_show"
         app:layout_constraintEnd_toStartOf="@+id/account_record_btn_copy"
         app:layout_constraintTop_toBottomOf="@+id/account_record_tv_platform"
         app:srcCompat="@drawable/ic_btn_eye" />

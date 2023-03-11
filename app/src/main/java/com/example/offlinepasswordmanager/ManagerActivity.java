@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileInputStream;
@@ -94,6 +96,17 @@ public class ManagerActivity extends AppCompatActivity {
             searchView.onActionViewCollapsed();
             return true;
         });
+
+        // setup buttons
+        FloatingActionButton viewBtnAddRecord = findViewById(R.id.manager_btn_add);
+        ImageButton viewBtnExport = findViewById(R.id.manager_btn_export);
+        ImageButton viewBtnDelete = findViewById(R.id.manager_btn_delete_db);
+        ImageButton viewBtnHelp = findViewById(R.id.manager_btn_help);
+
+        viewBtnAddRecord.setOnClickListener(this::btnAddRecord);
+        viewBtnExport.setOnClickListener(this::btnExportDb);
+        viewBtnDelete.setOnClickListener(this::btnDeleteDb);
+        viewBtnHelp.setOnClickListener(this::btnHelp);
     }
 
     private void searchMatchingRecord(String newText) {
@@ -115,7 +128,7 @@ public class ManagerActivity extends AppCompatActivity {
         }
     }
     
-    ItemTouchHelper.SimpleCallback deleteAccountRecordCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    private final ItemTouchHelper.SimpleCallback deleteAccountRecordCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
@@ -189,21 +202,21 @@ public class ManagerActivity extends AppCompatActivity {
         }
     };
 
-    public void btnAddRecord(View view) {
+    private void btnAddRecord(View view) {
         Intent intent = new Intent(this, AddRecordActivity.class);
         intent.putExtra("lata", DATABASE_NAME);
         intent.putExtra("abre", RECORDING_PASSWORD);
         addRecordActivityResultLauncher.launch(intent);
     }
 
-    public void btnHelp(View view) {
+    private void btnHelp(View view) {
         Intent intent = new Intent(this, HelpActivity.class);
         intent.putExtra("lata", DATABASE_NAME);
         intent.putExtra("abre", RECORDING_PASSWORD);
         helpActivityResultLauncher.launch(intent);
     }
 
-    public void btnDeleteDb(View view) {
+    private void btnDeleteDb(View view) {
         String msg = "Are you sure you want to delete this database?";
         Snackbar.make(accountRecyclerView, msg, Snackbar.LENGTH_LONG).setAction("Yes", view1 -> {
             getApplicationContext().deleteDatabase(DATABASE_NAME + ".db");
@@ -216,13 +229,13 @@ public class ManagerActivity extends AppCompatActivity {
         }).show();
     }
 
-    public void btnExportDb(View view) {
+    private void btnExportDb(View view) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         folderPickerActivityLauncer.launch(intent);
 
     }
 
-    ActivityResultLauncher<Intent> folderPickerActivityLauncer = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> folderPickerActivityLauncer = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -233,7 +246,6 @@ public class ManagerActivity extends AppCompatActivity {
                         Uri selectedFolderUri = intent.getData();
 
                         String dbFileName = DATABASE_NAME + ".db";
-
 
                         try {
                             // Create a new empty file in the specified folder

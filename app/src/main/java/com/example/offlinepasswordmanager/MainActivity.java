@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,14 +13,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("");
+
+        Button buttonOpen = findViewById(R.id.main_btn_open);
+        Button buttonCreate = findViewById(R.id.main_btn_create);
+
+        buttonOpen.setOnClickListener(v -> btnOpen());
+        buttonCreate.setOnClickListener(v -> btnCreate());
     }
 
-    public void btnCreate(View view) {
+    private void btnCreate() {
         Intent intent = new Intent(this, CreateActivity.class);
         startActivity(intent);
     }
 
-    public void btnOpen(View view) {
+    private void btnOpen() {
         Intent intent = new Intent(this, OpenActivity.class);
         startActivity(intent);
     }

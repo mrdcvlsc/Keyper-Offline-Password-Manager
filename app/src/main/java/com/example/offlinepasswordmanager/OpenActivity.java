@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,9 +22,7 @@ import java.io.OutputStream;
 
 public class OpenActivity extends AppCompatActivity {
 
-    private EditText editTextDbName;
-
-    private EditText editTextDbPass;
+    private EditText editTextDbName, editTextDbPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +32,17 @@ public class OpenActivity extends AppCompatActivity {
 
         editTextDbName = findViewById(R.id.open_et_db_name);
         editTextDbPass = findViewById(R.id.open_et_password);
+
+        Button buttonOpen = findViewById(R.id.open_btn_open_db);
+        Button buttonImport = findViewById(R.id.open_btn_import_db);
+
+        // shorten versions of creating an on click listener callback function.
+        // see also 'inline lambda' and 'lambda' functions.
+        buttonOpen.setOnClickListener(this::btnOpen);
+        buttonImport.setOnClickListener(this::btnImport);
     }
 
-    public void btnOpen(View view) {
+    private void btnOpen(View view) {
         String dbName = editTextDbName.getText().toString();
         String dbPass = editTextDbPass.getText().toString();
 
@@ -89,8 +96,8 @@ public class OpenActivity extends AppCompatActivity {
                     intent.putExtra("lata", dbName);
                     intent.putExtra("abre", recordingPassword);
 
-                    editTextDbName.setText("");
                     editTextDbPass.setText("");
+                    editTextDbName.setText("");
 
                     startActivity(intent);
                 } else {
@@ -105,7 +112,7 @@ public class OpenActivity extends AppCompatActivity {
         }
     }
 
-    public void btnImport(View view) {
+    private void btnImport(View view) {
         Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         data.setType("*/*");
         data = Intent.createChooser(data, "Choose a file");
@@ -119,27 +126,38 @@ public class OpenActivity extends AppCompatActivity {
                     Intent data = result.getData();
                     Uri uri = data.getData();
 
-                    try { // copy the database file to the database path of the application
-                        InputStream inputStream = getApplicationContext().getContentResolver().openInputStream(uri);
+                    String[] pathSegments = uri.getPath().split(File.separator);
+                    String dbFileName = pathSegments[pathSegments.length - 1];
 
-                        String[] pathSegments = uri.getPath().split(File.separator);
-                        String dbFileName = pathSegments[pathSegments.length - 1];
-                        OutputStream outputStream = new FileOutputStream(getDatabasePath(dbFileName));
+                    File checkDb = getApplicationContext().getDatabasePath(dbFileName);
 
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = inputStream.read(buffer)) > 0) {
-                            outputStream.write(buffer, 0, length);
+                    if (checkDb.exists()) {
+                        Toast.makeText(getApplicationContext(), "Import Failed: Already Existing Database", Toast.LENGTH_LONG).show();
+                    } else if (dbFileName.endsWith(".db")) {
+                        try { // copy the database file to the database path of the application
+                            InputStream inputStream = getApplicationContext().getContentResolver().openInputStream(uri);
+                            OutputStream outputStream = new FileOutputStream(getDatabasePath(dbFileName));
+
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = inputStream.read(buffer)) > 0) {
+                                outputStream.write(buffer, 0, length);
+                            }
+
+                            outputStream.flush();
+                            outputStream.close();
+                            inputStream.close();
+
+                            Toast.makeText(getApplicationContext(), "Import Success: Database Added", Toast.LENGTH_LONG).show();
+
+                            editTextDbName.setText(dbFileName.replace(".db", ""));
+                            editTextDbPass.setText("");
+
+                        } catch (Exception err) {
+                            Toast.makeText(getApplicationContext(), "Import Failed: Read or Write Error", Toast.LENGTH_LONG).show();
                         }
-
-                        outputStream.flush();
-                        outputStream.close();
-                        inputStream.close();
-
-                        Toast.makeText(getApplicationContext(), "Successfully imported the database", Toast.LENGTH_LONG).show();
-
-                    } catch (Exception err) {
-                        Toast.makeText(getApplicationContext(), "Failed to import the database", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Import Failed: Incorrect File Extension", Toast.LENGTH_LONG).show();
                     }
                 }
             }

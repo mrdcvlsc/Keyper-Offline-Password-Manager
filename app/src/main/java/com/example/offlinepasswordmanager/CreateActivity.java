@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -12,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateActivity extends AppCompatActivity {
 
-    EditText editTextDbName, editTextDbPassword, editTextDbConfirm;
+    private EditText editTextDbName, editTextDbPassword, editTextDbConfirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,9 +23,16 @@ public class CreateActivity extends AppCompatActivity {
         editTextDbName = findViewById(R.id.create_et_db_name);
         editTextDbPassword = findViewById(R.id.create_et_password);
         editTextDbConfirm = findViewById(R.id.create_et_confirm_password);
+
+        // setup button
+        Button buttonCreate = findViewById(R.id.create_btn_create_db);
+        Button buttonClear = findViewById(R.id.create_btn_clear);
+
+        buttonCreate.setOnClickListener(this::btnCreate);
+        buttonClear.setOnClickListener(view -> btnClearField());
     }
 
-    public void btnCreate(View view) {
+    private void btnCreate(View view) {
         String dbname = editTextDbName.getText().toString();
         String password = editTextDbPassword.getText().toString();
         String confirm = editTextDbConfirm.getText().toString();
@@ -40,7 +48,7 @@ public class CreateActivity extends AppCompatActivity {
         } else if (!dbname.matches("[a-zA-Z\\d]+")) {
              Toast.makeText(this, "Alphanumeric characters only for Database name", Toast.LENGTH_LONG).show();
         } else if (createDb(dbname, password)) {
-            btnClearField(view);
+            btnClearField();
         }
     }
 
@@ -81,7 +89,7 @@ public class CreateActivity extends AppCompatActivity {
                 db.insertOrThrow("info", null, values);
 
             } catch (Exception err) {
-                Toast.makeText(getApplicationContext(), "Internal Error Occured", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Internal Error Occurred", Toast.LENGTH_SHORT).show();
                 throw err;
             }
             // password hashing : end
@@ -96,7 +104,7 @@ public class CreateActivity extends AppCompatActivity {
             intent.putExtra("lata", DB_NAME);
             intent.putExtra("abre", recordingPassword);
 
-            btnClearField(null);
+            btnClearField();
 
             startActivity(intent);
             return true;
@@ -106,7 +114,7 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
-    public void btnClearField(View view) {
+    private void btnClearField() {
         editTextDbName.setText("");
         editTextDbPassword.setText("");
         editTextDbConfirm.setText("");

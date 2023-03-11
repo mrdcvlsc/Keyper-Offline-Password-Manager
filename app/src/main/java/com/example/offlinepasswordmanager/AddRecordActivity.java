@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,16 +32,22 @@ public class AddRecordActivity extends AppCompatActivity {
         usernames = new ArrayList<>();
         platforms = new ArrayList<>();
         passwords = new ArrayList<>();
+
+        Button buttonConfirm = findViewById(R.id.add_record_btn_confirm);
+        Button buttonClear = findViewById(R.id.add_record_btn_clear);
+
+        buttonConfirm.setOnClickListener(v -> btnAddRecord());
+        buttonClear.setOnClickListener(v -> btnClearField());
     }
 
-    public void btnClearField(View view) {
+    private void btnClearField() {
         ((EditText) findViewById(R.id.add_record_et_username)).setText("");
         ((EditText) findViewById(R.id.add_record_et_platform)).setText("");
         ((EditText) findViewById(R.id.add_record_et_password)).setText("");
         ((EditText) findViewById(R.id.add_record_et_password_confirm)).setText("");
     }
 
-    public void btnAddRecord(View view) {
+    private void btnAddRecord() {
         String username = ((EditText) findViewById(R.id.add_record_et_username)).getText().toString();
         String platform = ((EditText) findViewById(R.id.add_record_et_platform)).getText().toString();
         String password = ((EditText) findViewById(R.id.add_record_et_password)).getText().toString();
@@ -63,7 +69,7 @@ public class AddRecordActivity extends AppCompatActivity {
                 platforms.add(platform);
                 passwords.add(password);
 
-                btnClearField(view);
+                btnClearField();
             }
         }
     }
@@ -108,6 +114,11 @@ public class AddRecordActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        onMyBackPressed();
+        super.onBackPressed();
+    }
+
+    private void onMyBackPressed() {
         String[] usernamesByteArray = new String[usernames.size()];
         String[] platformsByteArray = new String[platforms.size()];
         String[] passwordsByteArray = new String[passwords.size()];
@@ -128,7 +139,6 @@ public class AddRecordActivity extends AppCompatActivity {
 
         setResult(RESULT_OK, intent);
         finish();
-        super.onBackPressed();
     }
 
     @Override

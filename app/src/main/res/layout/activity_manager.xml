@@ -14,8 +14,7 @@
         android:layout_marginEnd="2dp"
         android:adjustViewBounds="true"
         android:background="@drawable/round_bg"
-        android:contentDescription="@string/cd_imgbtn_export_db"
-        android:onClick="btnExportDb"
+        android:contentDescription="@string/cd_img_btn_export_db"
 
         android:padding="11dp"
         android:scaleType="fitCenter"
@@ -31,9 +30,8 @@
         android:layout_marginEnd="2dp"
         android:adjustViewBounds="true"
         android:background="@drawable/round_bg"
-        android:contentDescription="@string/cd_imgbtn_delete_db"
+        android:contentDescription="@string/cd_img_btn_delete_db"
 
-        android:onClick="btnDeleteDb"
         android:paddingStart="13dp"
         android:paddingTop="8dp"
         android:paddingEnd="8dp"
@@ -53,7 +51,6 @@
         android:adjustViewBounds="true"
         android:background="@drawable/round_bg"
         android:contentDescription="@string/btn_manager_text"
-        android:onClick="btnHelp"
 
         android:padding="8dp"
         android:scaleType="fitCenter"
@@ -79,7 +76,6 @@
         android:clickable="true"
         android:contentDescription="@string/cd_btn_add_account"
         android:focusable="true"
-        android:onClick="btnAddRecord"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"

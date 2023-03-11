@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Offline Password Manager</string>
+    <string name="app_name_only">Keyper</string>
+    <string name="app_name">Keyper Offline Password Manager</string>
+    <string name="app_type_only">Offline Password Manager</string>
 
     <string name="txt_db_name_hint">Database Name</string>
     <string name="txt_username_hint">Username</string>
@@ -20,17 +22,17 @@
     <string name="btn_confirm_text">Confirm</string>
     <string name="btn_manager_text">Help</string>
 
-    <string name="cd_imgbtn_show">show password</string>
-    <string name="cd_imgbtn_copy">copy to clipboard</string>
-    <string name="cd_imgbtn_delete_db">Delete database button</string>
-    <string name="cd_imgbtn_export_db">Export database button</string>
+    <string name="cd_img_btn_show">show password</string>
+    <string name="cd_img_btn_copy">copy to clipboard</string>
+    <string name="cd_img_btn_delete_db">Delete database</string>
+    <string name="cd_img_btn_export_db">Export database</string>
     <string name="cd_btn_add_account">add account information</string>
 
-    <string name="help_1">1. Add an account item record</string>
-    <string name="help_2">2. Delete an account item record swipe item from right to left.</string>
-    <string name="help_3">3. Show or hide the password</string>
-    <string name="help_4">4. Copy the password to clipboard</string>
-    <string name="help_5">5. Help and show instruction</string>
-    <string name="help_6">6. Delete the opened account database list</string>
-    <string name="help_7">7. Export a backup of the database</string>
+    <string name="help_tv_1">1. Add an account item record</string>
+    <string name="help_tv_2">2. To Delete swipe item from right to left.</string>
+    <string name="help_tv_3">3. Show or hide the password</string>
+    <string name="help_tv_4">4. Copy the password to clipboard</string>
+    <string name="help_tv_5">5. Help and show instruction</string>
+    <string name="help_tv_6">6. Delete the opened account database list</string>
+    <string name="help_tv_7">7. Export a backup of the database</string>
 </resources>
