@@ -1,4 +1,4 @@
-# Offline-Password-Manager
+# Keyper-Offline-Password-Manager
 
 Record your account information to an offline database.
 
